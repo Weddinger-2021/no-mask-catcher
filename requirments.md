@@ -1,6 +1,6 @@
 
 # Team name : Py-pandas
-# Project name : Face mask detector system (FMDS)
+# Project name : No-Mask-Catcher
 
 
 # Vision: 
@@ -60,9 +60,9 @@
 6. If the person is not in the dataset, I'd like to be notified with an email to the company's authority with only these info:
     Data , Time , Screenshot.
 
-7. as a company management I'd like to cut off a certain amount from the salary(e.g: 20$) --> Stretch Goal
+7. As a company management I'd like to cut off a certain amount from the salary(e.g: 20$) --> Stretch Goal
 
-8. as a company management I'd like to inform that person with sms message with the amount of cut on his/her salary based on gender starting with(Mrs,Ms) -> Stretch Goal
+8. As a company management I'd like to inform that person with sms message with the amount of cut on his/her salary based on gender starting with(Mrs,Ms) -> Stretch Goal
 
 
 
@@ -113,9 +113,9 @@
 1. Name  
 2. Gender
 3. Phone number
-4. job title
-5. Job Id
+4. Job_title
+5. Job_Id
 6. Salary
 7. Department
-8. photos --> 10 photos for each 
+8. Photo
 
