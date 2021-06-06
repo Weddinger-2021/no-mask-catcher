@@ -1,0 +1,62 @@
+[
+	{
+		"Name" : "Faisal",
+		"Gender" : "male",
+		"Phone_number" : "078",
+		"email" : "faisalabuzaid@outlook.com",
+		"job_title" : "Full-stack python dev",
+		"Job_Id" : 132060,
+		"Salary" : 10000,
+		"Department" : "IT",
+		"photos" : "./assets/faisal.jpg"
+	},
+
+	{
+		"Name" : "abed alaziz",
+		"Gender" : "male",
+		"Phone_number" : "0786792529",
+		"email" : "abdalazzezzalsalahat@gmail.com",
+		"job_title" : "CEO",
+		"Job_Id" : 136061,
+		"Salary" : 50000,
+		"Department" : "IT",
+		"photos" : "./assets/abed.jpg"
+	},
+
+	{
+		"Name" : "Noor",
+		"Gender" : "female",
+		"Phone_number" : "078",
+		"email" : "nooromari@gmail.com",
+		"job_title" : "HR",
+		"Job_Id" : 130040,
+		"Salary" : 20000,
+		"Department" : "IT",
+		"photos" : "./assets/noor.jpg"
+	},
+
+	{
+		"Name" : "Tala",
+		"Gender" : "female",
+		"Phone_number" : "078",
+		"email" : "tala.hajeer@gmail.com",
+		"job_title" : "HR",
+		"Job_Id" : 130260,
+		"Salary" : 18000,
+		"Department" : "Management",
+		"photos" : "./assets/tala.jpg"
+	},
+
+	{
+		"Name" : "Muhannad",
+		"Gender" : "male",
+		"Phone_number" : "078",
+		"email" : "Muhannadalmughrabi233@gmail.com ",
+		"job_title" : "Full-stack python dev",
+		"Job_Id" : 132070,
+		"Salary" : 10000,
+		"Department" : "IT",
+		"photos" : "./assets/muhannad.jpg"
+	}
+
+]
