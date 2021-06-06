@@ -8,4 +8,3 @@ import datetime
 
 date_time = datetime.datetime.now()
 pics = []
-
