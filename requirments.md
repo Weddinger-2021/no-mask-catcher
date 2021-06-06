@@ -20,7 +20,7 @@
 > *Our product is a full deticting system that will alert the poerson who is not wearing the mask and retrieve his/her information if they were found in the data-set to notify the authorities by sening an e-mail with his/her information.*
 
 
-# Feature tasks(MVP): 
+# Features: 
 
 1. Scan a video to detect if the person is wearing a mask or not 
 
@@ -60,9 +60,9 @@
 6. If the person is not in the dataset, I'd like to be notified with an email to the company's authority with only these info:
     Data , Time , Screenshot.
 
-7. As a company management I'd like to cut off a certain amount from the salary(e.g: 20$) --> Stretch Goal
+7. **Stretch Goal** As a company management I'd like to cut off a certain amount from the salary(e.g: 20$)
 
-8. As a company management I'd like to inform that person with sms message with the amount of cut on his/her salary based on gender starting with(Mrs,Ms) -> Stretch Goal
+8. **Stretch Goal** As a company management I'd like to inform that person with sms message with the amount of cut on his/her salary based on gender starting with(Mrs,Ms)
 
 
 
@@ -108,7 +108,7 @@
 * Check if the person didn't wear the mask expect an E-mail sent to authorities with the a valid information.
 
 
-## DataSet:
+## Employees DataSet:
 
 1. Name  
 2. Gender
@@ -118,4 +118,19 @@
 6. Salary
 7. Department
 8. Photo
+
+## model DataSet:
+
+1. with mask
+2. without mask
+
+
+## Project Managment Tool:
+
+[Trello Board](https://trello.com/b/Ou9hyUbw/pypandas)
+
+
+
+
+
 
