@@ -1,3 +1,4 @@
+import os
 import face_recognition
 import cv2
 from face_recognition.api import face_encodings
@@ -10,6 +11,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
+
 
 date_time = datetime.datetime.now()
 formatted_date = date_time.strftime("%Y-%m-%d")
@@ -63,8 +65,9 @@ def employee(index):
     send_email(info, formatted_full , my_day)
 
 def send_email(info = None, f_full="" , day=""):
-    # with open(cap_frame_name, 'rb') as f:
-    #     img_data = f.read()
+    with open(cap_frame_name, 'rb') as f:
+        img_data = f.read()
+        f.close()
     
     s = smtplib.SMTP("smtp.gmail.com", 587)
     s.ehlo()
@@ -73,9 +76,8 @@ def send_email(info = None, f_full="" , day=""):
     s.login("muhannadalmughrabi233@gmail.com" , "scqokvmkxwtqgvoe") # need key
     calling = "Mr"
     gend = "his"
-    # msg = MIMEMultipart()
-    # msg['Subject'] = 'No Mask Warning'
-    subject = "No Mask warning"
+    msg = MIMEMultipart()
+    msg['Subject'] = 'No Mask Warning'
     
     if info != None:
 
@@ -83,30 +85,27 @@ def send_email(info = None, f_full="" , day=""):
             calling = "Mrs"
             gend = "her"
 
-        body = f'''      Dear esteemed security department, 
+    
+        body = MIMEText(f'''      Dear esteemed security department, 
         Our system detected {calling}. {info["Name"]} from {info["Department"]} department
         {gend} job id {info["Job_Id"]} who is not wearing a mask at {f_full} on {day}, 
-        please check attached photo below.{cap_frame_name}'''
-        # body = MIMEText(f'''      Dear esteemed security department, 
-        # Our system detected {calling}. {info["Name"]} from {info["Department"]} department
-        # {gend} job id {info["Job_Id"]} who is not wearing a mask at {f_full} on {day}, 
-        # please check attached photo below.{cap_frame_name}''')
+        please check attached photo below''')
 
     else: 
-        body = f'''      Dear esteemed security department, 
+
+        body = MIMEText(f'''      Dear esteemed security department, 
     Our system detected a visitor who is not wearing a mask at {f_full}, 
-    please check attached photo below.{cap_frame_name}'''
-    #     body = MIMEText(f'''      Dear esteemed security department, 
-    # Our system detected a visitor who is not wearing a mask at {f_full}, 
-    # please check attached photo below.{cap_frame_name}''')
+    please check attached photo below.''')
     
-    msg = f"Subject: {subject} \n\n {body}"
-    # msg.attach(body)
+    msg.attach(body)
+    image = MIMEImage(img_data, name=os.path.basename(cap_frame_name))
+    msg.attach(image)
     s.sendmail(
         'muhannadalmughrabi233@gmail.com',
-        'muhannadmughrabi@gmail.com', 
-        msg
+        'pypandas.mask.catcher@gmail.com', 
+        msg.as_string()
     )
+    s.quit()
     print(msg)
     print("EMAIL HAS BEEN SENT!") # should fire when email sent succesfully 
 
