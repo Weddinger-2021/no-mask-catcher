@@ -1,3 +1,4 @@
+import os
 import face_recognition
 import cv2
 from face_recognition.api import face_encodings
@@ -5,8 +6,22 @@ import numpy as np
 import re 
 import json as j
 import datetime
+import calendar
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.image import MIMEImage
+from email.mime.multipart import MIMEMultipart
+
 
 date_time = datetime.datetime.now()
+formatted_date = date_time.strftime("%Y-%m-%d")
+formatted_time = date_time.strftime("%H:%M:%S")
+formatted_full = formatted_date + f"-{formatted_time}"
+stripped_time = formatted_time.replace(":" , "")
+stripped_date = formatted_date.replace("-" , "")
+stripped_full = stripped_date + f"-{stripped_time}"
+my_day = calendar.day_name[date_time.weekday()]
+
 pics = []
 known_face_encodings = []
 
@@ -27,7 +42,7 @@ def access_cam():
         c = cv2.waitKey(1)
         if c == ord('c'): ## calls a screen shot function 
             global cap_frame_name
-            cap_frame_name = f'./assets/{date_time}.jpg'
+            cap_frame_name = f"./assets/{stripped_full}.jpg"
             cv2.imwrite(cap_frame_name, frame)
 
         if c == ord('b'): ## press Esc to exit 
@@ -47,28 +62,51 @@ def employee(index):
     """
     # print("It's a picture of me!")
     info = json_data[index]
-    send_email(info, date_time)
+    send_email(info, formatted_full , my_day)
 
-def send_email(info = None, d_time = '9:00'):
+def send_email(info = None, f_full="" , day=""):
+    with open(cap_frame_name, 'rb') as f:
+        img_data = f.read()
+        f.close()
+    
+    s = smtplib.SMTP("smtp.gmail.com", 587)
+    s.ehlo()
+    s.starttls()
+    s.ehlo()
+    s.login("muhannadalmughrabi233@gmail.com" , "scqokvmkxwtqgvoe") # need key
     calling = "Mr"
     gend = "his"
+    msg = MIMEMultipart()
+    msg['Subject'] = 'No Mask Warning'
+    
     if info != None:
 
         if info["Gender"] == "female": 
             calling = "Mrs"
             gend = "her"
-
-        print(f'''      Dear esteemed security department, 
+    
+        body = MIMEText(f'''      Dear esteemed security department, 
         Our system detected {calling}. {info["Name"]} from {info["Department"]} department
-        {gend} job id {info["Job_Id"]} who is not wearing a mask at {d_time}, 
-        please check attached photo below.{cap_frame_name}''')
-        ### the correct email validation and connection
+        {gend} job id {info["Job_Id"]} who is not wearing a mask at {f_full} on {day}, 
+        please check attached photo below''')
 
     else: 
-        print(f'''      Dear esteemed security department, 
-    Our system detected a visitor who is not wearing a mask at {d_time}, 
-    please check attached photo below.{cap_frame_name}''')
-        ### the correct email validation and connection
+
+        body = MIMEText(f'''      Dear esteemed security department, 
+    Our system detected a visitor who is not wearing a mask at {f_full}, 
+    please check attached photo below.''')
+    
+    msg.attach(body)
+    image = MIMEImage(img_data, name=os.path.basename(cap_frame_name))
+    msg.attach(image)
+    s.sendmail(
+        'muhannadalmughrabi233@gmail.com',
+        'pypandas.mask.catcher@gmail.com', 
+        msg.as_string()
+    )
+    s.quit()
+    print(msg)
+    print("EMAIL HAS BEEN SENT!") # should fire when email sent succesfully 
 
 def recognize_face(known_face_encodings):
     """
@@ -86,7 +124,8 @@ def recognize_face(known_face_encodings):
         cout += 1
     if results[0] == False:
         # print ("not employee")
-        send_email(None, date_time)
+        send_email(None, formatted_full , my_day)
+
         # for none employers code. take a screen shot and send an e-mail
 
 ### possibly in recognize_face function 
@@ -119,3 +158,4 @@ def red_alert():
 # if __name__ == "__main__":
 #     encode_known_pics(pics)
 #     access_cam()
+
