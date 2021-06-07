@@ -26,6 +26,7 @@ pics = []
 known_face_encodings = []
 
 
+
 def access_cam():
 
     cap = cv2.VideoCapture(0)
@@ -41,7 +42,6 @@ def access_cam():
         c = cv2.waitKey(1)
         if c == ord('c'): ## calls a screen shot function 
             global cap_frame_name
-            # path = r"D:\Folder\file.txt"
             cap_frame_name = f"./assets/{stripped_full}.jpg"
             cv2.imwrite(cap_frame_name, frame)
 
@@ -84,7 +84,6 @@ def send_email(info = None, f_full="" , day=""):
         if info["Gender"] == "female": 
             calling = "Mrs"
             gend = "her"
-
     
         body = MIMEText(f'''      Dear esteemed security department, 
         Our system detected {calling}. {info["Name"]} from {info["Department"]} department
@@ -126,6 +125,7 @@ def recognize_face(known_face_encodings):
     if results[0] == False:
         # print ("not employee")
         send_email(None, formatted_full , my_day)
+
         # for none employers code. take a screen shot and send an e-mail
 
 ### possibly in recognize_face function 
