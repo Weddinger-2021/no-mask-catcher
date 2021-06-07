@@ -5,24 +5,110 @@ import numpy as np
 import re 
 import json as j
 import datetime
+import calendar
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.image import MIMEImage
+from email.mime.multipart import MIMEMultipart
 
 date_time = datetime.datetime.now()
+formatted_date = date_time.strftime("%Y-%m-%d")
+formatted_time = date_time.strftime("%H:%M:%S")
+formatted_full = formatted_date + f"-{formatted_time}"
+stripped_time = formatted_time.replace(":" , "")
+stripped_date = formatted_date.replace("-" , "")
+stripped_full = stripped_date + f"-{stripped_time}"
+my_day = calendar.day_name[date_time.weekday()]
+
 pics = []
 known_face_encodings = []
 
+
+def access_cam():
+
+    cap = cv2.VideoCapture(0)
+
+    if not cap.isOpened():
+        raise IOError("Cannot open webcam")
+
+    while True:
+        ret, frame = cap.read()
+        frame = cv2.resize(frame, None, fx=1.0, fy=1.0, interpolation=cv2.INTER_AREA)
+        cv2.imshow('Input', frame)
+
+        c = cv2.waitKey(1)
+        if c == ord('c'): ## calls a screen shot function 
+            global cap_frame_name
+            # path = r"D:\Folder\file.txt"
+            cap_frame_name = f"./assets/{stripped_full}.jpg"
+            cv2.imwrite(cap_frame_name, frame)
+
+        if c == ord('b'): ## press Esc to exit 
+            break
+
+    cap.release()
+    cv2.destroyAllWindows()
+
+access_cam()
 # frame from the cv
-face_from_cam = face_recognition.load_image_file('./assets/noor.jpg')
+face_from_cam = face_recognition.load_image_file(cap_frame_name)
 face_from_cam_encodings = face_recognition.face_encodings(face_from_cam)[0]
 
 def employee(index):
     """
     A function that takes an index and return the employee info
     """
-    pass
+    # print("It's a picture of me!")
+    info = json_data[index]
+    send_email(info, formatted_full , my_day)
 
+def send_email(info = None, f_full="" , day=""):
+    # with open(cap_frame_name, 'rb') as f:
+    #     img_data = f.read()
+    
+    s = smtplib.SMTP("smtp.gmail.com", 587)
+    s.ehlo()
+    s.starttls()
+    s.ehlo()
+    s.login("muhannadalmughrabi233@gmail.com" , "scqokvmkxwtqgvoe") # need key
+    calling = "Mr"
+    gend = "his"
+    # msg = MIMEMultipart()
+    # msg['Subject'] = 'No Mask Warning'
+    subject = "No Mask warning"
+    
+    if info != None:
 
-def send_email(info = None, d_time = '9:00'):
-    pass
+        if info["Gender"] == "female": 
+            calling = "Mrs"
+            gend = "her"
+
+        body = f'''      Dear esteemed security department, 
+        Our system detected {calling}. {info["Name"]} from {info["Department"]} department
+        {gend} job id {info["Job_Id"]} who is not wearing a mask at {f_full} on {day}, 
+        please check attached photo below.{cap_frame_name}'''
+        # body = MIMEText(f'''      Dear esteemed security department, 
+        # Our system detected {calling}. {info["Name"]} from {info["Department"]} department
+        # {gend} job id {info["Job_Id"]} who is not wearing a mask at {f_full} on {day}, 
+        # please check attached photo below.{cap_frame_name}''')
+
+    else: 
+        body = f'''      Dear esteemed security department, 
+    Our system detected a visitor who is not wearing a mask at {f_full}, 
+    please check attached photo below.{cap_frame_name}'''
+    #     body = MIMEText(f'''      Dear esteemed security department, 
+    # Our system detected a visitor who is not wearing a mask at {f_full}, 
+    # please check attached photo below.{cap_frame_name}''')
+    
+    msg = f"Subject: {subject} \n\n {body}"
+    # msg.attach(body)
+    s.sendmail(
+        'muhannadalmughrabi233@gmail.com',
+        'muhannadmughrabi@gmail.com', 
+        msg
+    )
+    print(msg)
+    print("EMAIL HAS BEEN SENT!") # should fire when email sent succesfully 
 
 def recognize_face(known_face_encodings):
     """
@@ -34,11 +120,13 @@ def recognize_face(known_face_encodings):
         results = face_recognition.compare_faces([face], face_from_cam_encodings)
         name  = 'unknown'
         if results[0] == True:
-            print("it is an employee")
+            employee(cout)
+            # print("it is an employee")
             break
         cout += 1
     if results[0] == False:
-        print ("not employee")
+        # print ("not employee")
+        send_email(None, formatted_full , my_day)
         # for none employers code. take a screen shot and send an e-mail
 
 ### possibly in recognize_face function 
@@ -56,8 +144,8 @@ with open('employees.json', 'r') as jd:
     json_data = j.load(jd)
     for p in json_data:
         pics.append(p["photos"])
+    encode_known_pics(pics)
     
-
 def detect_mask():
     """
     A function to detect if a person is wearing a mask or not
@@ -68,6 +156,7 @@ def red_alert():
     pass
 
 
+# if __name__ == "__main__":
+#     encode_known_pics(pics)
+#     access_cam()
 
-if __name__ == "__main__":
-    encode_known_pics(pics)
