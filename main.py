@@ -100,7 +100,7 @@ def send_email(info = None, f_full="" , day=""):
     msg.attach(image)
     s.sendmail(
         'muhannadalmughrabi233@gmail.com',
-        'muhannadmughrabi@gmail.com', 
+        'pypandas.mask.catcher@gmail.com', 
         msg.as_string()
     )
     s.quit()
