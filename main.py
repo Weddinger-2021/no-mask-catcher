@@ -137,9 +137,10 @@ def recognize_face(cap_frame):
             cout += 1
         if results[0] == False:
             send_email(None, formatted_full , my_day)
+        return "Yes face"
     except IndexError:
-        print("No face!")
-
+        print("No face")
+        return "No face"
 def detect_mask(frame):
     """
     A function to detect if a person is wearing a mask or not
@@ -157,11 +158,13 @@ def detect_mask(frame):
             mask_result = model.predict(crop)
 
         if mask_result > 0.5 :
-            red_alert()
             global cap_frame_name
             cap_frame_name = f"./assets/{stripped_full}.jpg"
             cv2.imwrite(cap_frame_name, frame)
-            recognize_face(cap_frame_name)
+
+            is_face = recognize_face(cap_frame_name)
+            if is_face == "Yes face":
+                red_alert()
             time.sleep(10)
             return True
 
@@ -205,15 +208,15 @@ def access_cam():
         img = cv2.cvtColor(frame, cv2.IMREAD_GRAYSCALE)
 
         small_frame = cv2.resize(frame, (128, 128))
-        rgb_small_frame = small_frame[:, :, ::-1]
-        result_detect = detect_mask(rgb_small_frame) # number 0-1 # True if there's a face and not wearing a mask
+        # rgb_small_frame = small_frame[:, :, ::-1]
+        result_detect = detect_mask(small_frame) # number 0-1 # True if there's a face and not wearing a mask
 
         # face_locations = face_recognition.face_locations(rgb_small_frame)
 
         cv2.imshow('Input', frame)
         c = cv2.waitKey(1)
-        # if result_detect == True:
-            # pass
+        if result_detect == True:
+            red_alert()
         # if result_detect == False:
 
 
