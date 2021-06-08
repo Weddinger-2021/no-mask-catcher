@@ -16,7 +16,7 @@ from tensorflow.keras import models
 from tensorflow.keras.models import save_model, load_model
 from scipy.spatial import distance
 from PIL import Image as im
-
+import time
 from playsound import playsound
 
 
@@ -71,9 +71,9 @@ def send_email(info = None, f_full="" , day=""):
             gend = "her"
     
         body = MIMEText(f'''      Dear esteemed security department, 
-        Our system detected {calling}. {info["Name"]} from {info["Department"]} department
-        {gend} job id {info["Job_Id"]} who is not wearing a mask at {f_full} on {day}, 
-        please check attached photo below''')
+        Our system detected {calling}. {info["Name"]}
+        who is not wearing a mask at {f_full} on {day}, 
+        please check {gend} attached photo below''')
 
     else: 
 
@@ -124,17 +124,21 @@ def recognize_face(cap_frame):
     open_files()
 
     face_from_cam = face_recognition.load_image_file(cap_frame)
-    face_from_cam_encodings = face_recognition.face_encodings(face_from_cam)[0]
-    cout = 0
-    for face in known_face_encodings: 
-        results = face_recognition.compare_faces([face], face_from_cam_encodings)
-        name  = 'unknown'
-        if results[0] == True:
-            employee(cout)
-            break
-        cout += 1
-    if results[0] == False:
-        send_email(None, formatted_full , my_day)
+    try:
+        
+        face_from_cam_encodings = face_recognition.face_encodings(face_from_cam)[0]
+        cout = 0
+        for face in known_face_encodings: 
+            results = face_recognition.compare_faces([face], face_from_cam_encodings)
+            name  = 'unknown'
+            if results[0] == True:
+                employee(cout)
+                break
+            cout += 1
+        if results[0] == False:
+            send_email(None, formatted_full , my_day)
+    except IndexError:
+        print("No face!")
 
 def detect_mask(frame):
     """
@@ -143,19 +147,7 @@ def detect_mask(frame):
 
     faces = face_model.detectMultiScale(frame,scaleFactor=1.1, minNeighbors=4)
 
-    MIN_DISTANCE = 0
-
     if len(faces) >= 1:
-        label = [0 for i in range(len(faces))]
-
-        for i in range(len(faces)-1):
-
-            for j in range(i+1, len(faces)):
-                dist = distance.euclidean(faces[i][:2],faces[j][:2])
-
-                if dist < MIN_DISTANCE:
-                    label[i] = 1
-                    label[j] = 1
 
         for i in range(len(faces)):
             (top,y,bottom,left) = faces[i]
@@ -164,10 +156,20 @@ def detect_mask(frame):
             crop = np.reshape(crop,[1,128,128,3])/255.0
             mask_result = model.predict(crop)
 
-        return mask_result
+        if mask_result > 0.5 :
+            red_alert()
+            global cap_frame_name
+            cap_frame_name = f"./assets/{stripped_full}.jpg"
+            cv2.imwrite(cap_frame_name, frame)
+            recognize_face(cap_frame_name)
+            time.sleep(10)
+            return True
+
+        return False
+
 
     else:
-        return 0  
+        return False
 
 
 def red_alert():
@@ -202,22 +204,27 @@ def access_cam():
 
         img = cv2.cvtColor(frame, cv2.IMREAD_GRAYSCALE)
 
-        small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
+        small_frame = cv2.resize(frame, (128, 128))
         rgb_small_frame = small_frame[:, :, ::-1]
-        result_detect = detect_mask(rgb_small_frame) # number 0-1
+        result_detect = detect_mask(rgb_small_frame) # number 0-1 # True if there's a face and not wearing a mask
 
-        face_locations = face_recognition.face_locations(rgb_small_frame)
+        # face_locations = face_recognition.face_locations(rgb_small_frame)
 
         cv2.imshow('Input', frame)
         c = cv2.waitKey(1)
+        # if result_detect == True:
+            # pass
+        # if result_detect == False:
 
-        if result_detect > 0.5 :
-            global cap_frame_name
-            cap_frame_name = f"./assets/{stripped_full}.jpg"
-            cv2.imwrite(cap_frame_name, frame)
-            recognize_face(cap_frame_name)
 
-            red_alert()
+
+        # if result_detect > 0.5 :
+        #     red_alert()
+        #     global cap_frame_name
+        #     cap_frame_name = f"./assets/{stripped_full}.jpg"
+        #     recognize_face(cap_frame_name)
+        #     time.sleep(20)
+
             # draw_frame(face_locations,(255, 0, 0),"Catched")
 
         # elif result_detect <= 0.5 :
