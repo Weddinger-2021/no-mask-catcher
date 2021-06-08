@@ -16,6 +16,7 @@ import tensorflow
 from tensorflow.keras import models
 from tensorflow.keras.models import save_model, load_model
 from scipy.spatial import distance
+from PIL import Image as im
 
 
 
@@ -115,25 +116,28 @@ def recognize_face(cap_frame):
 
         # for none employers code. take a screen shot and send an e-mail
 
-def detect_mask(screenshot):
+def detect_mask(frame):
     """
     A function to detect if a person is wearing a mask or not
     """
     face_model = cv2.CascadeClassifier('data_set/convs/haarcascade_frontalface_default.xml')
-    img = cv2.imread(screenshot)
+
+    data = im.fromarray(frame) 
+    print(data)
+    data_path = data.save('gfg_dummy_pic.png')
+    img = cv2.imread(data)
 
     img = cv2.cvtColor(img, cv2.IMREAD_GRAYSCALE)
 
     faces = face_model.detectMultiScale(img,scaleFactor=1.1, minNeighbors=4)
 
+    global out_img
     out_img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
 
-    # for (x,y,w,h) in faces:
-    #     cv2.rectangle(out_img,(x,y),(x+w,y+h),(0,0,255),1)
         
     model = load_model("./saved_model", compile = True)
 
-    sample_mask_img = cv2.imread(screenshot)
+    sample_mask_img = cv2.imread(data)
     sample_mask_img = cv2.resize(sample_mask_img,(128,128))
     sample_mask_img = np.reshape(sample_mask_img,[1,128,128,3])
     sample_mask_img = sample_mask_img/255.0
@@ -169,6 +173,16 @@ def detect_mask(screenshot):
 def red_alert():
     pass
 
+def draw_frame(frame,color,label):
+    for (x,y,w,h) in frame:
+                y *= 4
+                w *= 4
+                h *= 4
+                x *= 4
+                cv2.rectangle(frame,(x,y),(x+w,y+h),color,1)
+                cv2.rectangle(frame, (x, y+h - 35), (x+w, y+h), color, cv2.FILLED)
+                font = cv2.FONT_HERSHEY_DUPLEX
+                cv2.putText(frame, label, (x + 6, y+h - 6), font, 1.0, (255, 255, 255), 1)
 
 def access_cam():
 
@@ -194,11 +208,11 @@ def access_cam():
             cap_frame_name = f"./assets/{stripped_full}.jpg"
             cv2.imwrite(cap_frame_name, frame)
             recognize_face(cap_frame_name)
+            draw_frame(out_img,(255, 0, 0),"Catched")
             # rec red, catch 'name' 
 
         elif result_detect <= 0.5 :
-            # rec green, wearing 
-            print('green')
+           draw_frame(out_img,(0, 255, 0),"Ok")
 
         if c == ord('b'): ## press Esc to exit 
             break
