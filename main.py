@@ -16,6 +16,7 @@ from tensorflow.keras import models
 from tensorflow.keras.models import save_model, load_model
 from scipy.spatial import distance
 from PIL import Image as im
+from playsound import playsound
 
 
 
@@ -161,7 +162,8 @@ def detect_mask(frame):
         return 0  
 
 def red_alert():
-    pass
+    for i in range (0,5):
+        playsound('./sounds/alert.mp3')
 
 
 ############################## find a new way to draw a face rectangle ##############################
@@ -202,6 +204,7 @@ def access_cam():
             cap_frame_name = f"./assets/{stripped_full}.jpg"
             cv2.imwrite(cap_frame_name, frame)
             recognize_face(cap_frame_name)
+            red_alert()
             # draw_frame(face_locations,(255, 0, 0),"Catched")
 
         # elif result_detect <= 0.5 :
