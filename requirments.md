@@ -108,6 +108,18 @@
 * Check if the person didn't wear the mask expect an E-mail sent to authorities with the a valid information.
 
 
+## Domain Model:
+![domain model](https://github.com/organs-2021/no-mask-catcher/blob/main/D_Model_second.png)
+
+
+## Work flow: 
+![work flow](https://github.com/organs-2021/no-mask-catcher/blob/main/D_Model_first.png)
+
+
+## Data-set Diagram: 
+![data-set diagram](https://github.com/organs-2021/no-mask-catcher/blob/main/D_Model_third.png)
+
+
 ## Employees DataSet:
 
 1. Name  
