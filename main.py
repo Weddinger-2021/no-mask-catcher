@@ -15,6 +15,8 @@ import tensorflow
 # from tensorflow.keras.models import load_module
 from tensorflow.keras import models
 from tensorflow.keras.models import save_model, load_model
+from playsound import playsound
+import matplotlib.pyplot as plt
 
 
 def access_cam():
@@ -36,6 +38,8 @@ def access_cam():
             cv2.imwrite(cap_frame_name, frame)
             detect_screen = detect_mask(cap_frame_name)
             if detect_screen > 0.5:
+                for i in range (0,5):
+                    playsound('./sounds/alert.mp3')
 #                 state = False
                 return cap_frame_name
             elif detect_screen ==0:
@@ -100,12 +104,13 @@ def send_email(info = None, f_full="" , day=""):
     msg.attach(image)
     s.sendmail(
         'muhannadalmughrabi233@gmail.com',
-        'pypandas.mask.catcher@gmail.com', 
+        'muhannadmughrabi@gmail.com', 
         msg.as_string()
     )
     s.quit()
     print(msg)
-    print("EMAIL HAS BEEN SENT!") # should fire when email sent succesfully 
+    print("EMAIL HAS BEEN SENT!") # should fire when email sent succesfully
+    access_cam() 
 
 def recognize_face(known_face_encodings):
     """
@@ -142,17 +147,17 @@ def detect_mask(screenshot):
     """
     A function to detect if a person is wearing a mask or not
     """
-    face_model = cv2.CascadeClassifier('data_set/convs/haarcascade_frontalface_default.xml')
+    face_model = cv2.CascadeClassifier('./haarcascade_frontalface_default.xml')
     img = cv2.imread(screenshot)
-
     img = cv2.cvtColor(img, cv2.IMREAD_GRAYSCALE)
-
     faces = face_model.detectMultiScale(img,scaleFactor=1.1, minNeighbors=4)
 
     out_img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
 
-#     for (x,y,w,h) in faces:
-#         cv2.rectangle(out_img,(x,y),(x+w,y+h),(0,0,255),1)
+    for (x,y,w,h) in faces:
+        cv2.rectangle(out_img,(x,y),(x+w,y+h),(0,0,255),1)
+    plt.figure(figsize=(12,12))
+    plt.imshow(out_img)
         
     model = load_model("./saved_model", compile = True)
 
@@ -180,7 +185,7 @@ def detect_mask(screenshot):
             crop = cv2.resize(crop,(128,128))
             crop = np.reshape(crop,[1,128,128,3])/255.0
             mask_result = model.predict(crop)
-            cv2.putText(new_img,mask_label[round(mask_result[0][0])],(x, y+90),             cv2.FONT_HERSHEY_SIMPLEX,0.5,dist_label[label[i]],2)
+            cv2.putText(new_img,mask_label[round(mask_result[0][0])],(x, y+90),cv2.FONT_HERSHEY_SIMPLEX,0.5,dist_label[label[i]],2)
             cv2.rectangle(new_img,(x,y),(x+w,y+h),dist_label[label[i]],1)
         return mask_result
             
