@@ -12,20 +12,39 @@ from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 import tensorflow
-# from tensorflow.keras.models import load_module
 from tensorflow.keras import models
 from tensorflow.keras.models import save_model, load_model
 from scipy.spatial import distance
 from PIL import Image as im
 
+from playsound import playsound
+
+
+
+
+
+date_time = datetime.datetime.now()
+formatted_date = date_time.strftime("%Y-%m-%d")
+formatted_time = date_time.strftime("%H:%M:%S")
+formatted_full = formatted_date + f"-{formatted_time}"
+stripped_time = formatted_time.replace(":" , "")
+stripped_date = formatted_date.replace("-" , "")
+stripped_full = stripped_date + f"-{stripped_time}"
+my_day = calendar.day_name[date_time.weekday()]
+
+pics = []
+known_face_encodings = []
+
+face_model = cv2.CascadeClassifier('./haarcascade_frontalface_default.xml')
+model = load_model("./saved_model", compile = True)
 
 
 def employee(index):
     """
     A function that takes an index and return the employee info
     """
-    # print("It's a picture of me!")
     info = json_data[index]
+    print('busted')
     send_email(info, formatted_full , my_day)
 
 def send_email(info = None, f_full="" , day=""):
@@ -37,7 +56,9 @@ def send_email(info = None, f_full="" , day=""):
     s.ehlo()
     s.starttls()
     s.ehlo()
-    s.login("pypandas.catcher@gmail.com" , "kzmclxljulmpvaxg") # need key
+
+    s.login("pypandas.catcher@gmail.com" , "kzmclxljulmpvaxg")
+
     calling = "Mr"
     gend = "his"
     msg = MIMEMultipart()
@@ -64,7 +85,7 @@ def send_email(info = None, f_full="" , day=""):
     image = MIMEImage(img_data, name=os.path.basename(cap_frame_name))
     msg.attach(image)
     s.sendmail(
-        'muhannadalmughrabi233@gmail.com',
+        'pypandas.catcher@gmail.com',
         'pypandas.mask.catcher@gmail.com', 
         msg.as_string()
     )
@@ -72,7 +93,7 @@ def send_email(info = None, f_full="" , day=""):
     print(msg)
     print("EMAIL HAS BEEN SENT!") # should fire when email sent succesfully 
 
-### possibly in recognize_face function 
+
 def encode_known_pics(pics):
     """
     A function that takes employees pics list and encode them
@@ -80,10 +101,13 @@ def encode_known_pics(pics):
     for pic in pics:
         known_face = face_recognition.load_image_file(pic)
         known_face_encodings.append(face_recognition.face_encodings(known_face)[0])
-    # recognize_face(known_face_encodings)
+
 
 def open_files():
-    ## read json file & append the values to lists
+    """
+    Read json file & append the values to lists
+    """
+
     with open('employees.json', 'r') as jd:
         global json_data
         json_data = j.load(jd)
@@ -107,82 +131,63 @@ def recognize_face(cap_frame):
         name  = 'unknown'
         if results[0] == True:
             employee(cout)
-            # print("it is an employee")
             break
         cout += 1
     if results[0] == False:
-        # print ("not employee")
         send_email(None, formatted_full , my_day)
-
-        # for none employers code. take a screen shot and send an e-mail
 
 def detect_mask(frame):
     """
     A function to detect if a person is wearing a mask or not
     """
-    face_model = cv2.CascadeClassifier('data_set/convs/haarcascade_frontalface_default.xml')
 
-    data = im.fromarray(frame) 
-    print(data)
-    data_path = data.save('gfg_dummy_pic.png')
-    img = cv2.imread(data)
+    faces = face_model.detectMultiScale(frame,scaleFactor=1.1, minNeighbors=4)
 
-    img = cv2.cvtColor(img, cv2.IMREAD_GRAYSCALE)
-
-    faces = face_model.detectMultiScale(img,scaleFactor=1.1, minNeighbors=4)
-
-    global out_img
-    out_img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
-
-        
-    model = load_model("./saved_model", compile = True)
-
-    sample_mask_img = cv2.imread(data)
-    sample_mask_img = cv2.resize(sample_mask_img,(128,128))
-    sample_mask_img = np.reshape(sample_mask_img,[1,128,128,3])
-    sample_mask_img = sample_mask_img/255.0
-    model.predict(sample_mask_img)
-    mask_label = {0:'OK!',1:'Busted'}
-    dist_label = {0:(0,255,0),1:(255,0,0)}
     MIN_DISTANCE = 0
 
-    if len(faces)>=1:
+    if len(faces) >= 1:
         label = [0 for i in range(len(faces))]
+
         for i in range(len(faces)-1):
+
             for j in range(i+1, len(faces)):
                 dist = distance.euclidean(faces[i][:2],faces[j][:2])
-                if dist<MIN_DISTANCE:
+
+                if dist < MIN_DISTANCE:
                     label[i] = 1
                     label[j] = 1
-        new_img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR) #colored output image
+
         for i in range(len(faces)):
-            (x,y,w,h) = faces[i]
-            crop = new_img[y:y+h,x:x+w]
+            (top,y,bottom,left) = faces[i]
+            crop = frame[y:y+left,top:top+bottom]
             crop = cv2.resize(crop,(128,128))
             crop = np.reshape(crop,[1,128,128,3])/255.0
             mask_result = model.predict(crop)
-            cv2.putText(new_img,mask_label[round(mask_result[0][0])],(x, y+90),             cv2.FONT_HERSHEY_SIMPLEX,0.5,dist_label[label[i]],2)
-            cv2.rectangle(new_img,(x,y),(x+w,y+h),dist_label[label[i]],1)
+
         return mask_result
-            
+
     else:
-        print("Cannot detect face")
         return 0  
-        
+
 
 def red_alert():
-    pass
+    for i in range (0,5):
+        playsound('./sounds/alert.mp3')
 
-def draw_frame(frame,color,label):
-    for (x,y,w,h) in frame:
-                y *= 4
-                w *= 4
-                h *= 4
-                x *= 4
-                cv2.rectangle(frame,(x,y),(x+w,y+h),color,1)
-                cv2.rectangle(frame, (x, y+h - 35), (x+w, y+h), color, cv2.FILLED)
-                font = cv2.FONT_HERSHEY_DUPLEX
-                cv2.putText(frame, label, (x + 6, y+h - 6), font, 1.0, (255, 255, 255), 1)
+
+############################## find a new way to draw a face rectangle ##############################
+
+# def draw_frame(frame,color,label):
+#     for (top,right,bottom,left) in frame:
+#         top *= 2
+#         right *= 2
+#         left *= 2
+#         bottom *= 2
+#         cv2.rectangle(frame,(left,top),(right, bottom),color,1)
+#         cv2.rectangle(frame, (left, bottom - 35), (right, bottom), color, cv2.FILLED)
+#         font = cv2.FONT_HERSHEY_DUPLEX
+#         cv2.putText(frame, label, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
+
 
 def access_cam():
 
@@ -195,10 +200,13 @@ def access_cam():
     while True:
         ret, frame = cap.read()
 
-        small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
+        img = cv2.cvtColor(frame, cv2.IMREAD_GRAYSCALE)
 
+        small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
         rgb_small_frame = small_frame[:, :, ::-1]
         result_detect = detect_mask(rgb_small_frame) # number 0-1
+
+        face_locations = face_recognition.face_locations(rgb_small_frame)
 
         cv2.imshow('Input', frame)
         c = cv2.waitKey(1)
@@ -208,38 +216,22 @@ def access_cam():
             cap_frame_name = f"./assets/{stripped_full}.jpg"
             cv2.imwrite(cap_frame_name, frame)
             recognize_face(cap_frame_name)
-            draw_frame(out_img,(255, 0, 0),"Catched")
-            # rec red, catch 'name' 
 
-        elif result_detect <= 0.5 :
-           draw_frame(out_img,(0, 255, 0),"Ok")
+            red_alert()
+            # draw_frame(face_locations,(255, 0, 0),"Catched")
 
-        if c == ord('b'): ## press Esc to exit 
+        # elif result_detect <= 0.5 :
+        #    draw_frame(face_locations,(0, 255, 0),"Ok")
+
+        if c == ord('b'): ## press b to exit 
+
             break
 
     cap.release()
     cv2.destroyAllWindows()
 
 
+access_cam()
 
-if __name__ == "__main__":
-    date_time = datetime.datetime.now()
-    formatted_date = date_time.strftime("%Y-%m-%d")
-    formatted_time = date_time.strftime("%H:%M:%S")
-    formatted_full = formatted_date + f"-{formatted_time}"
-    stripped_time = formatted_time.replace(":" , "")
-    stripped_date = formatted_date.replace("-" , "")
-    stripped_full = stripped_date + f"-{stripped_time}"
-    my_day = calendar.day_name[date_time.weekday()]
 
-    pics = []
-    known_face_encodings = []
-    # longest pasth: access_cam -> detect_mask() -> encode_know_pics -> recognize_face -> employee -> Email #3
-    access_cam() # path to screenshot #1
-
-    
-    
-    
-    
-    
-
+############################## Ask dario if there is away to make our project faster  ##############################

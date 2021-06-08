@@ -1,6 +1,6 @@
 [
 	{
-		"Name" : "Faisal",
+		"Name" : "Faisal Abuzaid",
 		"Gender" : "male",
 		"Phone_number" : "078",
 		"email" : "faisalabuzaid@outlook.com",
@@ -12,7 +12,7 @@
 	},
 
 	{
-		"Name" : "abed alaziz",
+		"Name" : "Abed alaziz Alslhat",
 		"Gender" : "male",
 		"Phone_number" : "0786792529",
 		"email" : "abdalazzezzalsalahat@gmail.com",
@@ -24,7 +24,7 @@
 	},
 
 	{
-		"Name" : "Noor",
+		"Name" : "Noor Omari",
 		"Gender" : "female",
 		"Phone_number" : "078",
 		"email" : "nooromari@gmail.com",
@@ -36,7 +36,7 @@
 	},
 
 	{
-		"Name" : "Tala",
+		"Name" : "Tala Hajeer",
 		"Gender" : "female",
 		"Phone_number" : "078",
 		"email" : "tala.hajeer@gmail.com",
@@ -48,7 +48,7 @@
 	},
 
 	{
-		"Name" : "Muhannad",
+		"Name" : "Muhannad Almughrabi",
 		"Gender" : "male",
 		"Phone_number" : "078",
 		"email" : "Muhannadalmughrabi233@gmail.com ",
@@ -58,5 +58,4 @@
 		"Department" : "IT",
 		"photos" : "./assets/muhannad.jpg"
 	}
-
 ]
