@@ -24,37 +24,9 @@ my_day = calendar.day_name[date_time.weekday()]
 
 pics = []
 known_face_encodings = []
+file = 'employees.json'
 
 
-
-def access_cam():
-
-    cap = cv2.VideoCapture(0)
-
-    if not cap.isOpened():
-        raise IOError("Cannot open webcam")
-
-    while True:
-        ret, frame = cap.read()
-        frame = cv2.resize(frame, None, fx=1.0, fy=1.0, interpolation=cv2.INTER_AREA)
-        cv2.imshow('Input', frame)
-
-        c = cv2.waitKey(1)
-        if c == ord('c'): ## calls a screen shot function 
-            global cap_frame_name
-            cap_frame_name = f"./assets/{stripped_full}.jpg"
-            cv2.imwrite(cap_frame_name, frame)
-
-        if c == ord('b'): ## press Esc to exit 
-            break
-
-    cap.release()
-    cv2.destroyAllWindows()
-
-access_cam()
-# frame from the cv
-face_from_cam = face_recognition.load_image_file(cap_frame_name)
-face_from_cam_encodings = face_recognition.face_encodings(face_from_cam)[0]
 
 def employee(index):
     """
@@ -73,7 +45,7 @@ def send_email(info = None, f_full="" , day=""):
     s.ehlo()
     s.starttls()
     s.ehlo()
-    s.login("muhannadalmughrabi233@gmail.com" , "scqokvmkxwtqgvoe") # need key
+    s.login("pypandas.catcher@gmail.com" , "kzmclxljulmpvaxg") # need key for muhannd scqokvmkxwtqgvoe   muhannadalmughrabi233@gmail.com
     calling = "Mr"
     gend = "his"
     msg = MIMEMultipart()
@@ -100,7 +72,7 @@ def send_email(info = None, f_full="" , day=""):
     image = MIMEImage(img_data, name=os.path.basename(cap_frame_name))
     msg.attach(image)
     s.sendmail(
-        'muhannadalmughrabi233@gmail.com',
+        'pypandas.catcher@gmail.com',
         'pypandas.mask.catcher@gmail.com', 
         msg.as_string()
     )
@@ -113,6 +85,8 @@ def recognize_face(known_face_encodings):
     takes a list of encoded pictures and compare them with the incoming frame from the video
     to recognize if he/she was an employee or not.
     """
+    face_from_cam = face_recognition.load_image_file(cap_frame_name)
+    face_from_cam_encodings = face_recognition.face_encodings(face_from_cam)[0]
     cout = 0
     for face in known_face_encodings: 
         results = face_recognition.compare_faces([face], face_from_cam_encodings)
@@ -139,11 +113,14 @@ def encode_known_pics(pics):
     recognize_face(known_face_encodings)
 
 ## read json file & append the values to lists
-with open('employees.json', 'r') as jd:
-    json_data = j.load(jd)
-    for p in json_data:
-        pics.append(p["photos"])
-    encode_known_pics(pics)
+def open_files(file = 'employees.json'):
+
+    with open(file, 'r') as jd:
+        global json_data
+        json_data = j.load(jd)
+        for p in json_data:
+            pics.append(p["photos"])
+        encode_known_pics(pics)
     
 def detect_mask():
     """
@@ -153,6 +130,35 @@ def detect_mask():
 
 def red_alert():
     pass
+
+
+
+def access_cam():
+
+    cap = cv2.VideoCapture(0)
+
+    if not cap.isOpened():
+        raise IOError("Cannot open webcam")
+
+    while True:
+        ret, frame = cap.read()
+        frame = cv2.resize(frame, None, fx=1.0, fy=1.0, interpolation=cv2.INTER_AREA)
+        cv2.imshow('Input', frame)
+
+        c = cv2.waitKey(1)
+        if c == ord('c'): ## calls a screen shot function 
+            global cap_frame_name
+            cap_frame_name = f"./assets/{stripped_full}.jpg"
+            cv2.imwrite(cap_frame_name, frame)
+            open_files(file)
+
+        if c == ord('b'): ## press Esc to exit 
+            break
+
+    cap.release()
+    cv2.destroyAllWindows()
+
+access_cam()
 
 
 # if __name__ == "__main__":
