@@ -215,23 +215,6 @@ def access_cam():
 
         cv2.imshow('Input', frame)
         c = cv2.waitKey(1)
-        if result_detect == True:
-            red_alert()
-        # if result_detect == False:
-
-
-
-        # if result_detect > 0.5 :
-        #     red_alert()
-        #     global cap_frame_name
-        #     cap_frame_name = f"./assets/{stripped_full}.jpg"
-        #     recognize_face(cap_frame_name)
-        #     time.sleep(20)
-
-            # draw_frame(face_locations,(255, 0, 0),"Catched")
-
-        # elif result_detect <= 0.5 :
-        #    draw_frame(face_locations,(0, 255, 0),"Ok")
 
         if c == ord('b'): ## press b to exit 
 
