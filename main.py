@@ -16,6 +16,7 @@ from tensorflow.keras import models
 from tensorflow.keras.models import save_model, load_model
 from scipy.spatial import distance
 from PIL import Image as im
+
 from playsound import playsound
 
 
@@ -55,7 +56,9 @@ def send_email(info = None, f_full="" , day=""):
     s.ehlo()
     s.starttls()
     s.ehlo()
+
     s.login("pypandas.catcher@gmail.com" , "kzmclxljulmpvaxg")
+
     calling = "Mr"
     gend = "his"
     msg = MIMEMultipart()
@@ -90,6 +93,7 @@ def send_email(info = None, f_full="" , day=""):
     print(msg)
     print("EMAIL HAS BEEN SENT!") # should fire when email sent succesfully 
 
+
 def encode_known_pics(pics):
     """
     A function that takes employees pics list and encode them
@@ -98,10 +102,12 @@ def encode_known_pics(pics):
         known_face = face_recognition.load_image_file(pic)
         known_face_encodings.append(face_recognition.face_encodings(known_face)[0])
 
+
 def open_files():
     """
     Read json file & append the values to lists
     """
+
     with open('employees.json', 'r') as jd:
         global json_data
         json_data = j.load(jd)
@@ -134,7 +140,9 @@ def detect_mask(frame):
     """
     A function to detect if a person is wearing a mask or not
     """
+
     faces = face_model.detectMultiScale(frame,scaleFactor=1.1, minNeighbors=4)
+
     MIN_DISTANCE = 0
 
     if len(faces) >= 1:
@@ -161,6 +169,7 @@ def detect_mask(frame):
     else:
         return 0  
 
+
 def red_alert():
     for i in range (0,5):
         playsound('./sounds/alert.mp3')
@@ -179,6 +188,7 @@ def red_alert():
 #         font = cv2.FONT_HERSHEY_DUPLEX
 #         cv2.putText(frame, label, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
 
+
 def access_cam():
 
     process_this_frame = True
@@ -189,6 +199,7 @@ def access_cam():
 
     while True:
         ret, frame = cap.read()
+
         img = cv2.cvtColor(frame, cv2.IMREAD_GRAYSCALE)
 
         small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
@@ -196,6 +207,7 @@ def access_cam():
         result_detect = detect_mask(rgb_small_frame) # number 0-1
 
         face_locations = face_recognition.face_locations(rgb_small_frame)
+
         cv2.imshow('Input', frame)
         c = cv2.waitKey(1)
 
@@ -204,6 +216,7 @@ def access_cam():
             cap_frame_name = f"./assets/{stripped_full}.jpg"
             cv2.imwrite(cap_frame_name, frame)
             recognize_face(cap_frame_name)
+
             red_alert()
             # draw_frame(face_locations,(255, 0, 0),"Catched")
 
@@ -211,6 +224,7 @@ def access_cam():
         #    draw_frame(face_locations,(0, 255, 0),"Ok")
 
         if c == ord('b'): ## press b to exit 
+
             break
 
     cap.release()
@@ -218,5 +232,6 @@ def access_cam():
 
 
 access_cam()
+
 
 ############################## Ask dario if there is away to make our project faster  ##############################
