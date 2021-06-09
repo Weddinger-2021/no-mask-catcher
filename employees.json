@@ -37,5 +37,21 @@
 		"Phone_number" : "078",
 		"email" : "Muhannadalmughrabi233@gmail.com ",
 		"photos" : "./assets/muhannad.jpg"
+	},
+
+	{
+		"Name" : "Manar Abdulkareem",
+		"Gender" : "female",
+		"Phone_number" : "078",
+		"email" : "manar_example@gmail.com ",
+		"photos" : "./assets/manar.jpg"
+	},
+
+	{
+		"Name" : "Hisham",
+		"Gender" : "male",
+		"Phone_number" : "078",
+		"email" : "hisham_example@gmail.com ",
+		"photos" : "./assets/hisham.jpg"
 	}
 ]

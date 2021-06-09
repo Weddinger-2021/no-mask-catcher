@@ -125,13 +125,11 @@ def recognize_face(cap_frame):
         for face in known_face_encodings:
 
             results = face_recognition.compare_faces([face], face_from_cam_encodings)
-            name  = 'unknown'
             if results[0] == True:
                 employee(cout)
                 break
             cout += 1
         if results[0] == False:
-
             send_email(None, formatted_full , my_day)
         return "Yes face"
 
