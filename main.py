@@ -63,7 +63,6 @@ def employee(index):
     A function that takes an index and return the employee info
     """
     info = json_data[index]
-    print('busted')
     send_email(info, formatted_full , my_day)
 
 def send_email(info = None, f_full="" , day=""):
@@ -109,7 +108,6 @@ def send_email(info = None, f_full="" , day=""):
         msg.as_string()
     )
     s.quit()
-    print(msg)
     print("EMAIL HAS BEEN SENT!") # should fire when email sent succesfully 
 
 
@@ -136,7 +134,7 @@ def recognize_face(cap_frame):
             send_email(None, formatted_full , my_day)
         return "Yes face"
     except IndexError:
-        print("No face")
+        print("No faces found")
         return "No face"
 def detect_mask(frame):
     """
@@ -161,13 +159,10 @@ def detect_mask(frame):
             is_face = recognize_face(cap_frame_name)
             if is_face == "Yes face":
                 red_alert()
-                
-            for i in range(5,0,-1):
-                print(i)
+    
             return True
 
         return False
-
 
     else:
         return False
@@ -206,7 +201,6 @@ def access_cam():
 
 access_cam()
 
-############################## find a new way to draw a face rectangle ##############################
 
 # def draw_frame(frame,color,label):
 #     for (top,right,bottom,left) in frame:
