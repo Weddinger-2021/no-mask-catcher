@@ -3,7 +3,6 @@ import face_recognition
 import cv2
 from face_recognition.api import face_encodings
 import numpy as np
-import re 
 import json as j
 import datetime
 import calendar
@@ -11,17 +10,12 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
-import tensorflow
-from tensorflow.keras import models
-from tensorflow.keras.models import save_model, load_model
+from tensorflow.keras.models import load_model
 from scipy.spatial import distance
 from PIL import Image as im
 import time
 from playsound import playsound
 # import vext
-
-
-
 
 date_time = datetime.datetime.now()
 formatted_date = date_time.strftime("%Y-%m-%d")
@@ -35,19 +29,43 @@ my_day = calendar.day_name[date_time.weekday()]
 pics = []
 known_face_encodings = []
 
-face_model = cv2.CascadeClassifier('./haarcascade_frontalface_default.xml')
-model = load_model("./saved_model", compile = True)
+def loadmodel():
+    print("processing model ...")
+    global model
+    model = load_model("./saved_model", compile = True)
 
+def encode_known_pics(pics):
+    """
+    A function that takes employees pics list and encode them
+    """
+    for pic in pics:
+        known_face = face_recognition.load_image_file(pic)
+        known_face_encodings.append(face_recognition.face_encodings(known_face)[0])
+
+def open_files():
+    """
+    Read json file & append the values to lists
+    """
+
+    with open('employees.json', 'r') as jd:
+        global json_data
+        json_data = j.load(jd)
+        for p in json_data:
+            pics.append(p["photos"])
+        encode_known_pics(pics) 
+
+loadmodel()
+open_files()
 
 def employee(index):
     """
     A function that takes an index and return the employee info
     """
     info = json_data[index]
-    print('busted')
     send_email(info, formatted_full , my_day)
 
 def send_email(info = None, f_full="" , day=""):
+
     with open(cap_frame_name, 'rb') as f:
         img_data = f.read()
         f.close()
@@ -90,28 +108,7 @@ def send_email(info = None, f_full="" , day=""):
         msg.as_string()
     )
     s.quit()
-    print(msg)
     print("EMAIL HAS BEEN SENT!") # should fire when email sent succesfully 
-
-def encode_known_pics(pics):
-    """
-    A function that takes employees pics list and encode them
-    """
-    for pic in pics:
-        known_face = face_recognition.load_image_file(pic)
-        known_face_encodings.append(face_recognition.face_encodings(known_face)[0])
-
-def open_files():
-    """
-    Read json file & append the values to lists
-    """
-
-    with open('employees.json', 'r') as jd:
-        global json_data
-        json_data = j.load(jd)
-        for p in json_data:
-            pics.append(p["photos"])
-        encode_known_pics(pics) 
 
 def recognize_face(cap_frame):
     """
@@ -119,7 +116,6 @@ def recognize_face(cap_frame):
     to recognize if he/she was an employee or not.
     """
     # read dataset file, encoding images and append to list 'known_face_encodings'
-    open_files()
 
     face_from_cam = face_recognition.load_image_file(cap_frame)
     try:
@@ -140,25 +136,24 @@ def recognize_face(cap_frame):
         return "Yes face"
 
     except IndexError:
-        print("No face")
+        print("No faces found")
         return "No face"
 
 def detect_mask(frame):
     """
     A function to detect if a person is wearing a mask or not
     """
-
+    face_model = cv2.CascadeClassifier('./haarcascade_frontalface_default.xml')
     faces = face_model.detectMultiScale(frame,scaleFactor=1.1, minNeighbors=4)
 
     if len(faces) >= 1:
-        for i in range(len(faces)):
-            (top,y,bottom,left) = faces[i]
-            crop = frame[y:y+left,top:top+bottom]
-            crop = cv2.resize(crop,(128,128))
-            crop = np.reshape(crop,[1,128,128,3])/255.0
-            mask_result = model.predict(crop)
-            ### make sure what is the slowest part
- 
+
+        (top,y,bottom,left) = faces[0]
+        crop = frame[y:y+left,top:top+bottom]
+        crop = cv2.resize(crop,(128,128))
+        crop = np.reshape(crop,[1,128,128,3])/255.0
+        mask_result = model.predict(crop)
+
         if mask_result > 0.5 :
             global cap_frame_name
             cap_frame_name = f"./assets/{stripped_full}.jpg"
@@ -167,7 +162,7 @@ def detect_mask(frame):
             is_face = recognize_face(cap_frame_name)
             if is_face == "Yes face":
                 red_alert()
-            time.sleep(5)
+    
             return True
 
         print('Welcome')
@@ -185,8 +180,40 @@ def red_alert():
     except ModuleNotFoundError: 
         return 'Not wearing a mask alert'
 
+def draw_rectangle(frame,color,label):
+    pass
 
-############################## find a new way to draw a face rectangle ##############################
+def access_cam():
+    try:
+        process_this_frame = True
+        cap = cv2.VideoCapture(0)
+
+        if not cap.isOpened():
+            raise IOError("Cannot open webcam")
+
+        start = input('do you want to start camera?')
+        if start == 'Y' or 'y':            
+            while True:
+                ret, frame = cap.read()
+                frame = cv2.flip(frame,1)
+                frame = cv2.resize(frame,(900,700))
+                cv2.imshow('Pypandas-live', frame)
+                detect_mask(frame) # number 0-1 # True if there's a face and not wearing a mask
+                # time.sleep(5)
+                c = cv2.waitKey(1)
+                if c == ord('b'): ## press b to exit 
+                    break
+
+        cap.release()
+        cv2.destroyAllWindows()
+    except:
+        quit()
+
+access_cam()
+
+
+
+
 
 # def draw_frame(frame,color,label):
 #     for (top,right,bottom,left) in frame:
@@ -199,29 +226,4 @@ def red_alert():
 #         font = cv2.FONT_HERSHEY_DUPLEX
 #         cv2.putText(frame, label, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
 
-
-def access_cam():
-
-    cap = cv2.VideoCapture(0)
-
-    if not cap.isOpened():
-        raise IOError("Cannot open webcam")
-
-    while True:
-        ret, frame = cap.read()
-        
-        result_detect = detect_mask(frame) # number 0-1 # True if there's a face and not wearing a mask
-        # face_locations = face_recognition.face_locations(rgb_small_frame)
-        cv2.imshow('Input', frame)
-        c = cv2.waitKey(1)
-
-        if c == ord('b'): ## press b to exit 
-            break
-
-    cap.release()
-    cv2.destroyAllWindows()
-
-access_cam()
-
-### handle the sound libraries with 'try except'
 
