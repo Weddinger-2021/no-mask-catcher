@@ -18,7 +18,7 @@ from scipy.spatial import distance
 from PIL import Image as im
 import time
 from playsound import playsound
-
+# import vext
 
 
 
@@ -93,7 +93,6 @@ def send_email(info = None, f_full="" , day=""):
     print(msg)
     print("EMAIL HAS BEEN SENT!") # should fire when email sent succesfully 
 
-
 def encode_known_pics(pics):
     """
     A function that takes employees pics list and encode them
@@ -101,7 +100,6 @@ def encode_known_pics(pics):
     for pic in pics:
         known_face = face_recognition.load_image_file(pic)
         known_face_encodings.append(face_recognition.face_encodings(known_face)[0])
-
 
 def open_files():
     """
@@ -128,7 +126,8 @@ def recognize_face(cap_frame):
         
         face_from_cam_encodings = face_recognition.face_encodings(face_from_cam)[0]
         cout = 0
-        for face in known_face_encodings: 
+        for face in known_face_encodings:
+
             results = face_recognition.compare_faces([face], face_from_cam_encodings)
             name  = 'unknown'
             if results[0] == True:
@@ -136,11 +135,14 @@ def recognize_face(cap_frame):
                 break
             cout += 1
         if results[0] == False:
+
             send_email(None, formatted_full , my_day)
         return "Yes face"
+
     except IndexError:
         print("No face")
         return "No face"
+
 def detect_mask(frame):
     """
     A function to detect if a person is wearing a mask or not
@@ -149,14 +151,14 @@ def detect_mask(frame):
     faces = face_model.detectMultiScale(frame,scaleFactor=1.1, minNeighbors=4)
 
     if len(faces) >= 1:
-
         for i in range(len(faces)):
             (top,y,bottom,left) = faces[i]
             crop = frame[y:y+left,top:top+bottom]
             crop = cv2.resize(crop,(128,128))
             crop = np.reshape(crop,[1,128,128,3])/255.0
             mask_result = model.predict(crop)
-
+            ### make sure what is the slowest part
+ 
         if mask_result > 0.5 :
             global cap_frame_name
             cap_frame_name = f"./assets/{stripped_full}.jpg"
@@ -165,19 +167,23 @@ def detect_mask(frame):
             is_face = recognize_face(cap_frame_name)
             if is_face == "Yes face":
                 red_alert()
-            time.sleep(10)
+            time.sleep(5)
             return True
 
+        print('Welcome')
         return False
-
 
     else:
         return False
 
-
 def red_alert():
-    for i in range (0,5):
-        playsound('./sounds/alert.mp3')
+    try: 
+
+        for i in range (0,3):
+            playsound('./sounds/alert.mp3')
+
+    except ModuleNotFoundError: 
+        return 'Not wearing a mask alert'
 
 
 ############################## find a new way to draw a face rectangle ##############################
@@ -196,7 +202,6 @@ def red_alert():
 
 def access_cam():
 
-    process_this_frame = True
     cap = cv2.VideoCapture(0)
 
     if not cap.isOpened():
@@ -204,27 +209,19 @@ def access_cam():
 
     while True:
         ret, frame = cap.read()
-
-        img = cv2.cvtColor(frame, cv2.IMREAD_GRAYSCALE)
-
-        small_frame = cv2.resize(frame, (128, 128))
-        # rgb_small_frame = small_frame[:, :, ::-1]
-        result_detect = detect_mask(small_frame) # number 0-1 # True if there's a face and not wearing a mask
-
+        
+        result_detect = detect_mask(frame) # number 0-1 # True if there's a face and not wearing a mask
         # face_locations = face_recognition.face_locations(rgb_small_frame)
-
         cv2.imshow('Input', frame)
         c = cv2.waitKey(1)
 
         if c == ord('b'): ## press b to exit 
-
             break
 
     cap.release()
     cv2.destroyAllWindows()
 
-
 access_cam()
 
+### handle the sound libraries with 'try except'
 
-############################## Ask dario if there is away to make our project faster  ##############################
