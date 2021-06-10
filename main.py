@@ -109,7 +109,6 @@ def send_email(info = None, f_full="" , day=""):
         msg.as_string()
     )
     s.quit()
-    print(msg)
     print("EMAIL HAS BEEN SENT!") # should fire when email sent succesfully 
 
 
@@ -149,7 +148,7 @@ def detect_mask(frame):
 
         (top,y,bottom,left) = faces[0]
         crop = frame[y:y+left,top:top+bottom]
-        crop = cv2.resize(crop,(128,128))
+        crop = cv2.resize(crop,(128,128), fx=0.5,fy=0.5)
         crop = np.reshape(crop,[1,128,128,3])/255.0
         mask_result = model.predict(crop)
 
@@ -191,7 +190,7 @@ def access_cam():
             while True:
                 ret, frame = cap.read()
                 frame = cv2.flip(frame,1)
-                frame = cv2.resize(frame,(900,700))
+                # frame = cv2.resize(frame,(900,700))
                 cv2.imshow('Pypandas-live', frame)
                 detect_mask(frame) # number 0-1 # True if there's a face and not wearing a mask
                 # time.sleep(5)
