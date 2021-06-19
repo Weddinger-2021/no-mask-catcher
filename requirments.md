@@ -2,7 +2,6 @@
 # Team name : Py-pandas
 # Project name : No-Mask-Catcher
 
-
 # Vision: 
 
 **What is the vision of this product?**
@@ -18,6 +17,27 @@
 **Why should we care about your product?**
 
 > *Our product is a full deticting system that will alert the poerson who is not wearing the mask and retrieve his/her information if they were found in the data-set to notify the authorities by sening an e-mail with his/her information.*
+
+# User story : 
+1. As a company management I'd like to have a video system that recognizes if a person is not wearing a mask
+
+2. As a company management I'd like to take a screenshot of any person that is not wearing a mask from the video.
+
+3. As a company management I'd like to alert immediately with a 10 seconds warning audio if any person is not wearing a mask(Was stretch)
+
+4. As a compnay management I'd like to check if this person is in my dataset
+
+5. If the person is in the dataset , I'd like to be notified with an email to the company's authority with these info:
+	Data, Time , Screenshot , Name , Job title , Department , Job ID.
+
+6. If the person is not in the dataset, I'd like to be notified with an email to the company's authority with only these info:
+    Data , Time , Screenshot.
+
+7. **Stretch Goal** As a company management I'd like to cut off a certain amount from the salary(e.g: 20$)
+
+8. **Stretch Goal** As a company management I'd like to inform that person with sms message with the amount of cut on his/her salary based on gender starting with(Mrs,Ms)
+
+
 
 
 # Features: 
@@ -45,26 +65,6 @@
 *Dear esteemed security department, Our system detected the following person (Name: `name` , from Demaprtment:  `department` , job title: `jobtitle` with ID: `id`  is not wearing a mask in Date at time , please check attached photo below.(`Screenshot`)*
  
 
-# User story : 
-1. As a company management I'd like to have a video system that recognizes if a person is not wearing a mask
-
-2. As a company management I'd like to take a screenshot of any person that is not wearing a mask from the video.
-
-3. As a company management I'd like to alert immediately with a 10 seconds warning audio if any person is not wearing a mask(Was stretch)
-
-4. As a compnay management I'd like to check if this person is in my dataset
-
-5. If the person is in the dataset , I'd like to be notified with an email to the company's authority with these info:
-	Data, Time , Screenshot , Name , Job title , Department , Job ID.
-
-6. If the person is not in the dataset, I'd like to be notified with an email to the company's authority with only these info:
-    Data , Time , Screenshot.
-
-7. **Stretch Goal** As a company management I'd like to cut off a certain amount from the salary(e.g: 20$)
-
-8. **Stretch Goal** As a company management I'd like to inform that person with sms message with the amount of cut on his/her salary based on gender starting with(Mrs,Ms)
-
-
 
 # Software Requirements:
 
@@ -90,6 +90,7 @@
 * Accessibility
 * Adaptability
 * licensing
+
 
 
 
@@ -145,4 +146,53 @@
 
 
 
+
+
+# Installation 
+
+## Linux ubuntu deb: 
+
+1. `pip install CMake` OR `brew install CMake` *for local installation*
+
+2. `Clone Repository` 
+
+3. `poetry install`
+
+## Windows:
+
+> **You should use `pip install poetry` to contuniue with poetry.**
+
+1. **download python 3.8 from** [python organaization](https://www.python.org./downloads/) *(3.8.5 is recommended)* 
+
+2. [CMake](https://cmake.org/download/) *install Cmake required for your OS, extract the folder anywhere on your machine*
+
+3. *Set the path for the bin sub-folder inside the extracted folder in your system environmental variables.* 
+
+4. `pip install cmake` 
+
+5. **clone this repo** [dlib GitHub Repo](https://github.com/RvTechiNNovate/face_recog_dlib_file)
+
+6. **Inside above directory run:** `pip install dlib-19.19.0-cp38-cp38-win_amd64.whl`
+
+7. **clone our Repo.**
+
+8. `pip install`, *for all libraries in pyproject.toml.*
+
+9. `peotry install`
+
+
+
+
+
+
+
+## MacOS:
+
+1. `brew install cmake`
+
+2. `pip install poetry`
+
+2. `Clone Repository` 
+
+3. `poetry install`
 
