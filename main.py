@@ -148,7 +148,7 @@ def detect_mask(frame):
 
         (top,y,bottom,left) = faces[0]
         crop = frame[y:y+left,top:top+bottom]
-        crop = cv2.resize(crop,(128,128))
+        crop = cv2.resize(crop,(128,128), fx=0.5, fy=0.5)
         crop = np.reshape(crop,[1,128,128,3])/255.0
         mask_result = model.predict(crop)
 
