@@ -1,89 +1,176 @@
-# Team Agreement
-___
 
-# PyPandas
-___
-### Abed alaziz alsalahat
-### Faisal abuzaid
-### Muhannad almughrabi
-### Noor Omari
-### Tala Hajeer
-___
-___
-___
-
-
-## Cooperation Plan
-
-* 1. **Abed alaziz:** *logical thinking and organizer.*
-* 2. **Faisal:** *bug fixes and debugging.*
-* 3. **Muhannad:** *problem solving, re-search and mental suport.*
-* 4. **Noor:** *thinking out of the box and planing.*
-* 5. **Tala:** *problem solving and mathmatics.*
-
-* *The work will be divided depending on each member point of strength/s.*
-
-* *All team members want to develop their stringths in using python and other useful libraries.*
-
-* *Explaining new functions or methods functionalities in the beginning of each day.*
-
-____
-
-## Conflict Plan
-
-1. **What is the group process to resolve conflict, when it arises?**
-    * *We will do like a pull and the most voted choice for that conflict will be accepted, we support democratizes :D.
-
-2. **How will you raise concerns to members who are not adequately contributing?**
-
-    * We will talk to the team member:
-        
-        - If he/she has any issues or any circumstances.
-        
-        - If yes we will assign small tasks to him/her so he/she can follow up with us with an effort they could manage based on the situation.
-        
-        - If not, we will know what's her/his problem and encourage him/her to do what he/she likes to, or provide any help they need in order to proceed with other members.
-        
-        - If none of this works maybe we will tell the instructor to help us find a better solution.
-
-3. **How and when will you escalate the conflict if your resolution attempts are unsuccessful?**
-    * *If we find carelessness and neglecting without any reasonable cause, in this case, we will refer to our instructor in order to not complicate the situation!*
-
-____
-
-## Communication Plan
-
-1. **How will you communicate after hours and on the weekend?**
-
-    * *It's optional to communicate on weekends and it will be over zoom , also it depends on our progress, we all prefer that each one of us is going with the group(the most voted decisions) but we are flexible and it's not mandatory to attend on weekends.*
-
-2. **What is your strategy for ensuring everyone’s voice is heard?**
-
-    * *We already discussed this that everyone should be comfortable with his work and free to seek any help no matter what is it and should speak up for any concern he/she has, and the strategy is to work as a friendly environment before anything else that all of us should be kind in it to ensure that everyone is comfortable to tell anything he/she feels.*
-
-3. **How will you ensure that you are creating a safe environment where everyone feels comfortable speaking up?**
-
-    * *Everyday at the morning we will ask everyone is he/she has any concerns about any thing related to the work in the day before and the group in general.*
-
-____
-
-## Work Plan
-* *We will use the provided Trello board to assign tasks.*
-* *The whole group will work on the same functionality until it is finished.*
-* *Each one will be responsible for a certain task or component.* 
-* *When the functionality is ready, we will assign new tasks for another new one.*
+# Team name : Py-pandas
+# Project name : No-Mask-Catcher
 
 ____
 
 
-## Git Process
-* *We will create a development branch that will be only for staging, and when the functionality is fully implemented and it is ready to go live, we will make a pull request to the main branch.* 
+<p align="center">
+  <a href="https://github.com/organs-2021/no-mask-catcher"><img src="https://image.freepik.com/free-vector/face-mask-logo-template_23-2148691676.jpg" alt="Mask catcher"></a>
+</p>
 
-* *Each one, will be working on their tasks locally*
-    1. *Then will push their work on a separate branch.*
-    2. *Then they will make a pull request to the development branch.*
+<p align="center">
 
-* *One person is required to review the code, which will be pushed to the development branch.*
+<a href="https://github.com/organs-2021/no-mask-catcher" target="_blank">
+    <img src="https://img.shields.io/codecov/c/github/tiangolo/fastapi?color=%2334D058" alt="Coverage">
+</a>
 
-* *Two members will be required to merge to the main branch.*
+<a href="https://pypi.org/project/tensorflow/" target="_blank">
+    <img src="https://img.shields.io/pypi/v/fastapi?color=%2334D058&label=pypi%20package" alt="Package version">
+</a>
+
+<a href="https://pypi.org/project/tensorflow/" target="_blank">
+    <img src="https://img.shields.io/pypi/v/fastapi?color=%2334D058&label=pypi%20tensorflow" alt="Package version">
+</a>
+
+<a href="https://pypi.org/project/cmake/" target="_blank">
+    <img src="https://img.shields.io/pypi/v/fastapi?color=%2922D228&label=pypi%20CMake" alt="Package version">
+</a>
+
+<a href="https://twitter.com/intent/follow?screen_name=chrisatmachine">
+      <img src="https://img.shields.io/twitter/follow/chrisatmachine?style=social&logo=twitter" alt="follow on Twitter">
+    </a>
+
+</p>
+
+
+## Synopsis: 
+
+* <h3>We will build a project to detect whether the person on  the webcam is wearing a mask or not. We will train the face mask detector model using Keras and OpenCV.</h3>
+
+* <h3>We will Update our No Mask Catcher system with new features and new database, with a real time response and connected to modern UX/UI website.</h3>
+
+### Mission: 
+
+* <h3>Because wearing a mask has become a necessity to limit the spread of COVID-19, we will develop a python program to identify who is wearing a mask and who is not wearing a mask and alert the supervisers about it.</h3>
+
+
+___
+
+
+
+## Features: 
+
+1. Scan a video to detect if the person is wearing a mask or not 
+
+2. Take a screenshot if there's no mask!
+
+3. If there's no mask , Alert the person with 10 seconds audio warning.("Please wear your mask").
+
+4. If the person is in the dataset and is not wearing a mask retrieve his/her info.
+
+5. Send an email notification with the retrieved info (Department , Job title, Job ID) + Date, Time, , Screenshot
+
+6. If the person in not in the dataset , send an email notification with only Date , Time , Screenshot.
+
+___
+
+
+## Motivation:
+
+**What is the vision of this product?**
+
+> *We aim that our product will increase people's awareness to follow safety rules and wearing their masks.*
+
+
+**What pain point does this project solve?**
+
+> *Because wearing a mask has become a necessity  to limit the spread of COVID-19, we will develop a python program to identify who is wearing a mask and who is not wearing a mask and alert the superviser about it.*
+
+
+**Why should we care about your product?**
+
+> *Our product is a full deticting system that will alert the poerson who is not wearing the mask and retrieve his/her information if they were found in the data-set to notify the authorities by sening an e-mail with his/her information.*
+
+____
+
+
+## Installation:
+
+### Linux ubuntu deb: 
+
+1. `pip install CMake` OR `brew install CMake` *for local installation*
+
+2. `Clone Repository` 
+
+3. `poetry install`
+
+### Windows:
+
+> **You should use `pip install poetry` to contuniue with poetry.**
+
+1. **download python 3.8 from** [python organaization](https://www.python.org./downloads/) *(3.8.5 is recommended)* 
+
+2. [CMake](https://cmake.org/download/) *install Cmake required for your OS, extract the folder anywhere on your machine*
+
+3. *Set the path for the bin sub-folder inside the extracted folder in your system environmental variables.* 
+
+4. `pip install cmake` 
+
+5. **clone this repo** [dlib GitHub Repo](https://github.com/RvTechiNNovate/face_recog_dlib_file)
+
+6. **Inside above directory run:** `pip install dlib-19.19.0-cp38-cp38-win_amd64.whl`
+
+7. **clone our Repo.**
+
+8. `pip install`, *for all libraries in pyproject.toml.*
+
+9. `peotry install`
+
+
+
+### MacOS:
+
+1. `brew install cmake`
+
+2. `pip install poetry`
+
+2. `Clone Repository` 
+
+3. `poetry install`
+
+____
+
+
+
+
+## Software Requirements:
+
+1. any OS(linux, Windows , Mac)
+
+2. Python libraries needed(openCV, keras , tensorflow, tailwot ..etc) 
+
+3. an access to a camera device.
+
+4. an acess to an audio device.
+
+5. any python IDE (Visual Studio)
+
+6. Email API
+
+____
+
+## non-functional requirments:
+
+* Data integrity.
+* Portability.
+* reliablity. 
+* Security 
+* Testability
+* Accessibility
+* Adaptability
+* licensing
+____
+
+
+## API references: 
+
+____
+
+
+## Contributors:
+
+
+
+
 

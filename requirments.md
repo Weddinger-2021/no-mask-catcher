@@ -1,24 +1,11 @@
+# Requirements:  
 
-# Team name : Py-pandas
-# Project name : No-Mask-Catcher
+____
+____
+____
 
-# Vision: 
+# User story :
 
-**What is the vision of this product?**
-
-> *We aim that our product will increase people's awareness to follow safety rules and wearing their masks.*
-
-
-**What pain point does this project solve?**
-
-> *Because wearing a mask has become a necessity  to limit the spread of COVID-19, we will develop a python program to identify who is wearing a mask and who is not wearing a mask and alert the superviser about it.*
-
-
-**Why should we care about your product?**
-
-> *Our product is a full deticting system that will alert the poerson who is not wearing the mask and retrieve his/her information if they were found in the data-set to notify the authorities by sening an e-mail with his/her information.*
-
-# User story : 
 1. As a company management I'd like to have a video system that recognizes if a person is not wearing a mask
 
 2. As a company management I'd like to take a screenshot of any person that is not wearing a mask from the video.
@@ -55,6 +42,9 @@
 6. If the person in not in the dataset , send an email notification with only Date , Time , Screenshot.
 
 
+___
+
+
 ## Email format:
 
 **For non-employee:**
@@ -65,33 +55,7 @@
 *Dear esteemed security department, Our system detected the following person (Name: `name` , from Demaprtment:  `department` , job title: `jobtitle` with ID: `id`  is not wearing a mask in Date at time , please check attached photo below.(`Screenshot`)*
  
 
-
-# Software Requirements:
-
-1. any OS(linux, Windows , Mac)
-
-2. Python libraries needed(openCV, keras , tensorflow, tailwot ..etc) 
-
-3. an access to a camera device.
-
-4. an acess to an audio device.
-
-5. any python IDE (Visual Studio)
-
-6. Email API
-
-## non-functional requirments:
-
-* Data integrity.
-* Portability.
-* reliablity. 
-* Security 
-* Testability
-* Accessibility
-* Adaptability
-* licensing
-
-
+____
 
 
 
@@ -145,54 +109,4 @@
 
 
 
-
-
-
-# Installation 
-
-## Linux ubuntu deb: 
-
-1. `pip install CMake` OR `brew install CMake` *for local installation*
-
-2. `Clone Repository` 
-
-3. `poetry install`
-
-## Windows:
-
-> **You should use `pip install poetry` to contuniue with poetry.**
-
-1. **download python 3.8 from** [python organaization](https://www.python.org./downloads/) *(3.8.5 is recommended)* 
-
-2. [CMake](https://cmake.org/download/) *install Cmake required for your OS, extract the folder anywhere on your machine*
-
-3. *Set the path for the bin sub-folder inside the extracted folder in your system environmental variables.* 
-
-4. `pip install cmake` 
-
-5. **clone this repo** [dlib GitHub Repo](https://github.com/RvTechiNNovate/face_recog_dlib_file)
-
-6. **Inside above directory run:** `pip install dlib-19.19.0-cp38-cp38-win_amd64.whl`
-
-7. **clone our Repo.**
-
-8. `pip install`, *for all libraries in pyproject.toml.*
-
-9. `peotry install`
-
-
-
-
-
-
-
-## MacOS:
-
-1. `brew install cmake`
-
-2. `pip install poetry`
-
-2. `Clone Repository` 
-
-3. `poetry install`
 
